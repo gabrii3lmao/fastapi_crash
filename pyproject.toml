@@ -1,0 +1,62 @@
+[project]
+name = "fast-zero"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "gabrii3lmao", email = "gabrielmluz56@gmail.com" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "fastapi[standard]>=0.141.1",
+]
+
+[project.scripts]
+fast-zero = "fast_zero:main"
+
+[build-system]
+requires = ["uv_build>=0.12.15,<0.13.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "httpx2>=2.13.0",
+    "pytest>=9.1.1",
+    "pytest-cov>=7.1.0",
+    "ruff>=0.16.8",
+    "taskipy>=1.14.1",
+    "typos>=1.50.2",
+]
+
+[tool.taskipy.tasks]
+lint = "ruff check"
+format = "ruff check --fix && ruff format"
+serve = "fastapi dev src/fast_zero/app.py"
+pre_test = "taskipy lint"
+tests = "pytest -s -x -vv && coverage html --show-contexts"
+
+[tool.ruff]
+line-length = 79
+extend-exclude = ['migrations']
+
+[tool.ruff.lint]
+preview = true
+select = ['I', 'F', 'E', 'W', 'PL', 'PT']
+
+[tool.ruff.format]
+preview = true
+quote-style = 'single'
+
+[tool.pytest]
+pythonpath = ['.']
+addopts = ['-p', 'no:warnings', '--cov=fast_zero', '--cov-context=test']
+
+[tool.typos.files]
+extend-exclude = ["*.md", "migrations"]
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+tag_format = "$version"
+version_scheme = "semver"
+version_provider = "uv"
+major_version_zero = true
