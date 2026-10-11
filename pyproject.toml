@@ -3,9 +3,7 @@ name = "fast-zero"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-authors = [
-    { name = "gabrii3lmao", email = "gabrielmluz56@gmail.com" }
-]
+authors = [{ name = "gabrii3lmao", email = "gabrielmluz56@gmail.com" }]
 requires-python = ">=3.14"
 dependencies = [
     "alembic>=1.20.0",
@@ -37,7 +35,7 @@ dev = [
 lint = "ruff check"
 format = "ruff check --fix && ruff format"
 serve = "fastapi dev src/fast_zero/app.py"
-pre_test = "taskipy lint"
+pre_test = "task lint"
 tests = "pytest -s -x -vv && coverage html --show-contexts"
 
 [tool.ruff]
@@ -54,7 +52,14 @@ quote-style = 'single'
 
 [tool.pytest]
 pythonpath = ['.']
-addopts = ['-p', 'no:warnings', '--cov=fast_zero', '--cov-context=test']
+addopts = [
+    '-p',
+    'no:warnings',
+    '--cov=fast_zero',
+    '--cov-context=test',
+    '--cov-branch',
+    '--random-order'
+]
 
 [tool.typos.files]
 extend-exclude = ["*.md", "migrations"]
