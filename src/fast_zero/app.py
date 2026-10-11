@@ -24,6 +24,18 @@ def read_users(skip: int = 0, limit: int = 100, session: Session = Depends(get_s
     return {'users': users}
 
 
+@app.get('/users/{user_id}', status_code=HTTPStatus.OK, response_model=UserPublic)
+def find_user(user_id: int, session: Session = Depends(get_session)):
+    db_user = session.scalar(select(User).where(User.id == user_id))
+
+    if not db_user:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail='User not found'
+        )
+
+    return db_user
+
+
 @app.post('/users', status_code=HTTPStatus.CREATED, response_model=UserPublic)
 def create_user(user: UserSchema, session: Session = Depends(get_session)):
     db_user = session.scalar(
