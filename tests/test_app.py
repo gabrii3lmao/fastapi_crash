@@ -59,6 +59,15 @@ def test_read_user(client):
     assert response.json() == {'users': []}
 
 
+def test_read_user_by_id(client, user):
+    response = client.get(f'/users/{user.id}')
+
+    assert response.json() == {'id': user.id,
+                               'username': user.username,
+                               'email': user.email
+                               }
+
+
 def test_read_user_with_user(client, user):
     user_schema = UserPublic.model_validate(user).model_dump()
     response = client.get('/users/')
