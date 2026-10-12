@@ -30,7 +30,7 @@ def session():
     engine = create_engine(
         'sqlite:///:memory:',
         connect_args={'check_same_thread': False},
-        poolclass=StaticPool
+        poolclass=StaticPool,
     )
     table_registry.metadata.create_all(engine)
 
@@ -65,8 +65,11 @@ def mock_db_time():
 @pytest.fixture
 def user(session):
     password = 'testtest'
-    user = User(username='Teste', email='teste@test.com',
-                password=get_password_hash(password))
+    user = User(
+        username='Teste',
+        email='teste@test.com',
+        password=get_password_hash(password),
+    )
     session.add(user)
     session.commit()
     session.refresh(user)
@@ -78,10 +81,10 @@ def user(session):
 @pytest.fixture
 def token(client, user):
     response = client.post(
-        '/token',
+        '/auth/token',
         data={
             'username': user.email,
-            'password': getattr(user, 'clean_password')
+            'password': getattr(user, 'clean_password'),
         },
     )
     return response.json()['access_token']

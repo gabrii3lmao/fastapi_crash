@@ -7,8 +7,9 @@ from fast_zero.models import User
 
 def test_create_user(session, mock_db_time):
     with mock_db_time(model=User) as time:
-        new_user = User(username='alice', password='secret',
-                        email='teste@test')
+        new_user = User(
+            username='alice', password='secret', email='teste@test'
+        )
         session.add(new_user)
         session.commit()
 
@@ -20,5 +21,5 @@ def test_create_user(session, mock_db_time):
         'email': 'teste@test',
         'password': 'secret',
         'created_at': time,
-        'updated_at': time
+        'updated_at': time,
     }
