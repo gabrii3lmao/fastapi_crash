@@ -6,13 +6,14 @@ readme = "README.md"
 authors = [{ name = "gabrii3lmao", email = "gabrielmluz56@gmail.com" }]
 requires-python = ">=3.14"
 dependencies = [
+    "aiosqlite>=0.22.1",
     "alembic>=1.20.0",
     "asyncpg>=0.32.0",
     "fastapi[standard]>=0.141.1",
     "pwdlib[argon2]>=0.3.1",
     "pydantic-settings>=2.15.0",
     "pyjwt>=2.15.1",
-    "sqlalchemy>=2.1.4",
+    "sqlalchemy[asyncio]>=2.1.4",
 ]
 
 [project.scripts]
@@ -26,6 +27,7 @@ build-backend = "uv_build"
 dev = [
     "httpx2>=2.13.0",
     "pytest>=9.1.1",
+    "pytest-asyncio>=1.4.0",
     "pytest-cov>=7.1.0",
     "pytest-random-order>=1.2.0",
     "ruff>=0.16.8",
@@ -62,6 +64,7 @@ addopts = [
     '--cov-branch',
     '--random-order'
 ]
+asyncio_default_fixture_loop_scope = 'function'
 
 [tool.typos.files]
 extend-exclude = ["*.md", "migrations"]
