@@ -5,6 +5,7 @@ from sqlalchemy import select
 
 from fast_zero.models import User
 
+
 @pytest.mark.asyncio
 async def test_create_user(session, mock_db_time):
     with mock_db_time(model=User) as time:

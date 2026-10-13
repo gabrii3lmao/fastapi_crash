@@ -2,7 +2,7 @@ from http import HTTPStatus
 
 from jwt import decode
 
-from fast_zero.security import settings, create_access_token
+from fast_zero.security import create_access_token, settings
 
 
 def test_jwt():
@@ -39,3 +39,29 @@ def test_get_token(client, user):
     assert response.status_code == HTTPStatus.OK
     assert 'access_token' in token
     assert 'token_type' in token
+
+
+def test_user_not_found(client):
+    response = client.post(
+        '/auth/token',
+        data={
+            'username': 'teste@testado.com',
+            'password': 'secret'
+        }
+    )
+
+    assert response.status_code == HTTPStatus.UNAUTHORIZED
+    assert response.json() == {'detail': 'Incorrect email or password'}
+
+
+def test_wrong_password(client, user):
+    response = client.post(
+        '/auth/token',
+        data={
+            'username': user.email,
+            'password': 'wrong_secret'
+        }
+    )
+
+    assert response.status_code == HTTPStatus.UNAUTHORIZED
+    assert response.json() == {'detail': 'Incorrect email or password'}
