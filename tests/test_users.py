@@ -165,18 +165,9 @@ def test_find_user_not_found(client):
     assert response.json() == {'detail': 'User not found'}
 
 
-def test_update_different_user(client, user, token):
-    user_one = client.post(
-        '/users/',
-        json={
-            'username': 'fausto',
-            'email': 'fausto@example.com',
-            'password': 'secret',
-        },
-    )
-
+def test_update_user_with_wrong_user(client, other_user, token):
     response = client.put(
-        f'/users/{user_one.json()['id']}',
+        f'/users/{other_user.id}',
         headers={'Authorization': f'Bearer {token}'},
         json={
             'username': 'test123',
@@ -189,18 +180,9 @@ def test_update_different_user(client, user, token):
     assert response.json() == {'detail': 'Not enough permissions'}
 
 
-def test_delete_different_user(client, user, token):
-    user_one = client.post(
-        '/users/',
-        json={
-            'username': 'fausto',
-            'email': 'fausto@example.com',
-            'password': 'secret',
-        },
-    )
-
+def test_delete_with_wrong_user(client, other_user, token):
     response = client.delete(
-        f'/users/{user_one.json()['id']}',
+        f'/users/{other_user.id}',
         headers={'Authorization': f'Bearer {token}'},
     )
 

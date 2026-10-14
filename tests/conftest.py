@@ -68,17 +68,26 @@ def mock_db_time():
 @pytest_asyncio.fixture
 async def user(session):
     password = 'testtest'
-    user = User(
-        username='Teste',
-        email='teste@test.com',
-        password=get_password_hash(password),
-    )
+    user = UserFactory(password=get_password_hash(password))
     session.add(user)
     await session.commit()
     await session.refresh(user)
 
     setattr(user, 'clean_password', password)
     return user
+
+
+@pytest_asyncio.fixture
+async def other_user(session):
+    password = 'testtest'
+    user = UserFactory(password=get_password_hash(password))
+    session.add(user)
+    await session.commit()
+    await session.refresh(user)
+
+    setattr(user, 'clean_password', password)
+    return user
+
 
 
 @pytest.fixture
