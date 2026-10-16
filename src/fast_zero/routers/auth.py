@@ -9,7 +9,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from fast_zero.database import get_session
 from fast_zero.models import User
 from fast_zero.schemas import Token
-from fast_zero.security import create_access_token, verify_password, get_current_user
+from fast_zero.security import (
+    create_access_token,
+    get_current_user,
+    verify_password,
+)
 
 router = APIRouter(prefix='/auth', tags=['auth'])
 
@@ -23,7 +27,9 @@ async def login_for_access_token(
     form_data: OAuth2Form,
     session: SessionDep,
 ):
-    user = await session.scalar(select(User).where(User.email == form_data.username))
+    user = await session.scalar(
+        select(User).where(User.email == form_data.username)
+    )
 
     if not user:
         raise HTTPException(

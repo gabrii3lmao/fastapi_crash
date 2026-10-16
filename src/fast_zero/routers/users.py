@@ -24,9 +24,12 @@ CurrentUser = Annotated[User, Depends(get_current_user)]
 
 
 @router.get('/', status_code=HTTPStatus.OK, response_model=UserList)
-async def read_users(session: SessionDep, filter_users: Annotated[FilterPage, Query()]):
-    query = await session.scalars(select(User).offset(
-        filter_users.offset).limit(filter_users.limit))
+async def read_users(
+    session: SessionDep, filter_users: Annotated[FilterPage, Query()]
+):
+    query = await session.scalars(
+        select(User).offset(filter_users.offset).limit(filter_users.limit)
+    )
 
     users = query.all()
 
@@ -107,7 +110,9 @@ async def update_user(
 
 
 @router.delete('/{user_id}', status_code=HTTPStatus.OK, response_model=Message)
-async def delete_user(user_id: int, session: SessionDep, current_user: CurrentUser):
+async def delete_user(
+    user_id: int, session: SessionDep, current_user: CurrentUser
+):
     if current_user.id != user_id:
         raise HTTPException(
             status_code=HTTPStatus.FORBIDDEN, detail='Not enough permissions'

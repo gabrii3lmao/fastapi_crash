@@ -1,5 +1,6 @@
-from freezegun import freeze_time
 from http import HTTPStatus
+
+from freezegun import freeze_time
 
 
 def test_get_token(client, user):
@@ -21,10 +22,7 @@ def test_get_token(client, user):
 def test_user_not_found(client):
     response = client.post(
         '/auth/token',
-        data={
-            'username': 'teste@testado.com',
-            'password': 'secret'
-        }
+        data={'username': 'teste@testado.com', 'password': 'secret'},
     )
 
     assert response.status_code == HTTPStatus.UNAUTHORIZED
@@ -34,10 +32,7 @@ def test_user_not_found(client):
 def test_wrong_password(client, user):
     response = client.post(
         '/auth/token',
-        data={
-            'username': user.email,
-            'password': 'wrong_secret'
-        }
+        data={'username': user.email, 'password': 'wrong_secret'},
     )
 
     assert response.status_code == HTTPStatus.UNAUTHORIZED
@@ -50,8 +45,8 @@ def test_token_expired_after_time(client, user):
             '/auth/token',
             data={
                 'username': user.email,
-                'password': getattr(user, 'clean_password')
-            }
+                'password': getattr(user, 'clean_password'),
+            },
         )
 
         assert response.status_code == HTTPStatus.OK
@@ -64,8 +59,8 @@ def test_token_expired_after_time(client, user):
             json={
                 'username': 'wrongwrong',
                 'email': 'wrong@wrong.com',
-                'password': 'wrong'
-            }
+                'password': 'wrong',
+            },
         )
         assert response.status_code == HTTPStatus.UNAUTHORIZED
         assert response.json() == {'detail': 'Could not validate credentials'}
@@ -73,8 +68,7 @@ def test_token_expired_after_time(client, user):
 
 def test_refresh_token(client, user, token):
     response = client.post(
-        '/auth/refresh_token',
-        headers={'Authorization': f'Bearer {token}'}
+        '/auth/refresh_token', headers={'Authorization': f'Bearer {token}'}
     )
 
     data = response.json()
@@ -91,7 +85,7 @@ def test_token_expired_dont_refresh(client, user):
             '/auth/token',
             data={
                 'username': user.email,
-                'password': getattr(user, 'clean_password')
+                'password': getattr(user, 'clean_password'),
             },
         )
 

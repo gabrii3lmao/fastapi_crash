@@ -1,6 +1,7 @@
 from contextlib import contextmanager
 from datetime import datetime
 
+import factory
 import pytest
 import pytest_asyncio
 from fastapi.testclient import TestClient
@@ -8,7 +9,6 @@ from sqlalchemy import event
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.pool import StaticPool
 
-import factory
 from fast_zero.app import app
 from fast_zero.database import get_session
 from fast_zero.models import User, table_registry
@@ -87,7 +87,6 @@ async def other_user(session):
 
     setattr(user, 'clean_password', password)
     return user
-
 
 
 @pytest.fixture

@@ -172,8 +172,8 @@ def test_update_user_with_wrong_user(client, other_user, token):
         json={
             'username': 'test123',
             'email': 'test1@email.com',
-            'password': '123456'
-        }
+            'password': '123456',
+        },
     )
 
     assert response.status_code == HTTPStatus.FORBIDDEN

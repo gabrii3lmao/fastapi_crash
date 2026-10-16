@@ -68,6 +68,9 @@ addopts = [
 ]
 asyncio_default_fixture_loop_scope = 'function'
 
+[tool.typos.default]
+extend-ignore-identifiers-re = ["selectin"]
+
 [tool.typos.files]
 extend-exclude = ["*.md", "migrations"]
 
