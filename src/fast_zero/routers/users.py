@@ -62,11 +62,11 @@ async def create_user(user: UserSchema, session: SessionDep):
                 status_code=HTTPStatus.CONFLICT,
                 detail='Email already exists',
             )
-        if db_user.username == user.username:
-            raise HTTPException(
-                status_code=HTTPStatus.CONFLICT,
-                detail='Username already exists',
-            )
+
+        raise HTTPException(
+            status_code=HTTPStatus.CONFLICT,
+            detail='Username already exists',
+        )
 
     hashed_password = get_password_hash(user.password)
 
