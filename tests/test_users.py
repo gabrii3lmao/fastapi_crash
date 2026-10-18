@@ -129,7 +129,7 @@ def test_delete_user(client, user, token):
     )
 
     assert response.status_code == HTTPStatus.OK
-    assert response.json() == {'message': 'success'}
+    assert response.json() == {'message': 'success!'}
 
 
 def test_get_current_user_not_found(client):
