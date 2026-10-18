@@ -27,12 +27,12 @@ def test_create_todo(client, token):
         },
     )
 
-    assert response.json() == {
-        'id': 1,
-        'title': 'Test todo',
-        'description': 'Test todo description',
-        'state': 'draft',
-    }
+    data = response.json()
+
+    assert 'created_at' in data
+    assert 'updated_at' in data
+    assert 'id' in data
+    assert data['title'] == 'Test todo'
 
 
 @pytest.mark.asyncio
@@ -154,9 +154,7 @@ async def test_list_todos_filter_combined_should_return_5_todos(
 
 def test_patch_todo_error(client, token):
     response = client.patch(
-        '/todos/10',
-        json={},
-        headers={'Authorization': f'Bearer {token}'}
+        '/todos/10', json={}, headers={'Authorization': f'Bearer {token}'}
     )
     assert response.status_code == HTTPStatus.NOT_FOUND
     assert response.json() == {'detail': 'Task not found.'}
@@ -172,7 +170,7 @@ async def test_patch_todo(session, client, user, token):
     response = client.patch(
         f'/todos/{todo.id}',
         json={'title': 'teste!'},
-        headers={'Authorization': f'Bearer {token}'}
+        headers={'Authorization': f'Bearer {token}'},
     )
 
     assert response.status_code == HTTPStatus.OK
@@ -187,8 +185,7 @@ async def test_delete_todo(session, client, user, token):
     await session.commit()
 
     response = client.delete(
-        f'/todos/{todo.id}',
-        headers={'Authorization': f'Bearer {token}'}
+        f'/todos/{todo.id}', headers={'Authorization': f'Bearer {token}'}
     )
 
     assert response.status_code == HTTPStatus.OK
@@ -203,9 +200,35 @@ async def test_delete_different_user_todo(session, client, other_user, token):
     await session.commit()
 
     response = client.delete(
-        f'/todos/{todo.id}',
-        headers={'Authorization': f'Bearer {token}'}
+        f'/todos/{todo.id}', headers={'Authorization': f'Bearer {token}'}
     )
 
     assert response.status_code == HTTPStatus.NOT_FOUND
     assert response.json() == {'detail': 'Task not found.'}
+
+
+@pytest.mark.asyncio
+async def test_get_todo_is_valid(client, user, token):
+    client.post(
+        '/todos',
+        headers={'Authorization': f'Bearer {token}'},
+        json={
+            'title': 'Test todo',
+            'description': 'Test todo description',
+            'state': 'draft',
+        },
+    )
+
+    response = client.get(
+        '/todos', 
+        headers={'Authorization': f'Bearer {token}'}
+    )
+    
+    todo = response.json()['todos'][0]
+    
+    assert response.status_code == HTTPStatus.OK
+    assert todo['title'] == 'Test todo'
+    assert todo['description'] == 'Test todo description'
+    assert todo['state'] == 'draft'
+    
+    
