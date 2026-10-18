@@ -14,7 +14,7 @@ from fast_zero.schemas import (
     TodoList,
     FilterTodo,
     TodoUpdate,
-    Message
+    Message,
 )
 from fast_zero.security import get_current_user
 
@@ -89,9 +89,7 @@ async def patch_todo(
 
 
 @router.delete('/{todo_id}', response_model=Message)
-async def delete_todo(
-    todo_id: int, session: Session, user: CurrentUser
-):
+async def delete_todo(todo_id: int, session: Session, user: CurrentUser):
     db_todo = await session.scalar(
         select(Todo).where(Todo.user_id == user.id, Todo.id == todo_id)
     )
