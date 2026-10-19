@@ -1,4 +1,5 @@
 name: Pipeline
+
 on: [push, pull_request]
 
 jobs:
@@ -6,7 +7,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Instalar o python
-        uses: actions/setup-python@v6
+      - name: Baixar código do repositório
+        uses: actions/checkout@v4
+
+      - name: Instalar o Python
+        uses: actions/setup-python@v5
         with:
           python-version: '3.14'
+
+      - name: Instalar o uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Instalar dependências
+        run: uv sync
+
+      - name: Executar testes
+        run: uv run task tests
