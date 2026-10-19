@@ -1,0 +1,32 @@
+services:
+  fastzero_database:
+    image: postgres:16-alpine
+    container_name: fastzero_database
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin@123
+      POSTGRES_DB: app_fastapi
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  fastzero_app:
+    build: .
+    container_name: fastzero_app
+    entrypoint: ./entrypoint.sh
+    ports:
+      - "8000:8000"
+    depends_on:
+      - fastzero_database
+    environment:
+      DB_USER: postgres
+      DB_PASSWORD: admin@123
+      DB_HOST: fastzero_database
+      DB_PORT: 5432
+      DB_NAME: app_fastapi
+    
+
+volumes:
+  pgdata:
